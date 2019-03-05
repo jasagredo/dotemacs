@@ -4,7 +4,9 @@
 (use-package neotree
   :config
   (global-set-key (kbd "C-x n t") 'neotree-toggle)
-  (setq neo-smart-open t))
+  (setq neo-smart-open t)
+  :init
+  (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
 ;;;; Delete selection
 (delete-selection-mode 1)
 ;;;; Tabs
@@ -31,3 +33,5 @@
   (ido-mode t))
 ;;;; Remove trailing whitespace on saving
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
+;; Autocomplete
+(use-package auto-complete)
