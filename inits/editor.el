@@ -33,5 +33,3 @@
   (ido-mode t))
 ;;;; Remove trailing whitespace on saving
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
-;; Autocomplete
-(use-package auto-complete)

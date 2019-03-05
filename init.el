@@ -3,6 +3,13 @@
 (require 'package)
 (add-to-list 'package-archives (cons "melpa" "https://melpa.org/packages/") t)
 (package-initialize)
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (setq packages '(lsp-ui cargo racer flycheck-rust use-package rust-mode rainbow-delimiters projectile org-bullets neotree multiple-cursors magit howdoi haskell-mode flycheck diminish dashboard company))
+  (mapc (lambda (x) (unless (package-installed-p x)
+                 (package-install x))) packages))
+
+
 (require 'use-package)
 (message "Init time for %s: %s" "loading package and melpa" (- (time-to-seconds (current-time)) te))
 
