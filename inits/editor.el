@@ -15,8 +15,6 @@
 (use-package multiple-cursors
   :config
   (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines))
-;;;; macOs
-(setq ns-right-alternate-modifier nil)
 ;;;; backup and lock files
 (setq create-lockfiles nil)
 (setq backup-directory-alist '(("." . "~/.emacs.d/backup"))

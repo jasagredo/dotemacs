@@ -5,6 +5,7 @@
          ("C-c a" . org-agenda))
   :init (progn
           (setq org-directory "~/Dropbox/org")
+          (setq org-agenda-files (quote ("~/Dropbox/org/agenda/agenda.org")))
           (setq org-agenda-files (cons "~/Dropbox/org/notes.org" (cons "~/Dropbox/org/agenda.org" (directory-files-recursively "~/Dropbox/org/agenda/" "\.org$"))))
           (setq org-default-notes-file (concat org-directory "/notes.org"))
           (setq org-capture-templates

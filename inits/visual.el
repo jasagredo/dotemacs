@@ -54,3 +54,5 @@
 ;;;; All-the-icons
 (use-package all-the-icons
   :ensure t)
+;; Font size
+(set-face-attribute 'default nil :height 190)

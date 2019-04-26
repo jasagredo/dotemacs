@@ -9,10 +9,16 @@
 (use-package lsp-ui
   :ensure t
   :init
-  (add-hook 'lsp-mode-hook 'lsp-ui-mode))
+  (add-hook 'lsp-mode-hook 'lsp-ui-mode)
+  :config
+  (setq lsp-ui-imenu-kind-position (quote left)))
 
 (use-package rust-mode
   :config
+  (setq cargo-process--command-build "build")
+  (setq cargo-process--command-clippy "+nightly clippy --all")
+  (setq cargo-process--command-fmt "+nightly fmt")
+  (setq cargo-process--enable-rust-backtrace t)
   (setq rust-format-on-save t)
   (define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)
   (setq company-tooltip-align-annotations t)
