@@ -4,7 +4,8 @@
   :init
   (add-hook 'prog-major-mode #'lsp-prog-major-mode-enable)
   :config
-  (setq lsp-rust-rls-command '("rustup" "run" "nightly" "rls")))
+  (setq lsp-rust-rls-command '("rustup" "run" "nightly" "rls"))
+  (setq lsp-prefer-flymake nil))
 
 (use-package lsp-ui
   :ensure t
