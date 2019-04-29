@@ -4,7 +4,7 @@
   :init
   (add-hook 'prog-major-mode #'lsp-prog-major-mode-enable)
   :config
-  (setq lsp-rust-rls-command '("rustup" "run" "nightly" "rls"))
+  (setq lsp-rust-rls-command '("rustup" "run" "rls"))
   (setq lsp-prefer-flymake nil))
 
 (use-package lsp-ui
@@ -16,10 +16,7 @@
 
 (use-package rust-mode
   :config
-  (setq cargo-process--command-build "build")
-  (setq cargo-process--command-clippy "+nightly clippy --all")
-  (setq cargo-process--command-fmt "+nightly fmt")
-  (setq cargo-process--enable-rust-backtrace t)
+  (setq rust-rustfmt-bin "~/.rustup/toolchains/nightly-2019-03-22-x86_64-unknown-linux-gnu/bin/rustfmt")
   (setq rust-format-on-save t)
   (define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)
   (setq company-tooltip-align-annotations t)
@@ -41,4 +38,8 @@
 (use-package cargo
   :diminish cargo-mode " CRG "
   :config
-  (add-hook 'rust-mode-hook 'cargo-minor-mode))
+  (add-hook 'rust-mode-hook 'cargo-minor-mode)
+  (setq cargo-process--command-build "build")
+  (setq cargo-process--command-clippy "+nightly clippy --all")
+  (setq cargo-process--command-fmt "+nightly fmt")
+  (setq cargo-process--enable-rust-backtrace t))
