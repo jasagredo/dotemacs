@@ -31,3 +31,7 @@
   (ido-mode t))
 ;;;; Remove trailing whitespace on saving
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
+;;; Indent Guide
+(use-package indent-guide
+  :config
+  (indent-guide-global-mode t))
