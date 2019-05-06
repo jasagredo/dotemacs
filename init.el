@@ -5,7 +5,7 @@
 (package-initialize)
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
-  (setq packages '(indent-guide ag lsp-ui cargo racer flycheck-rust use-package rust-mode rainbow-delimiters projectile org-bullets neotree multiple-cursors magit howdoi haskell-mode flycheck diminish dashboard company))
+  (setq packages '(undo-tree exec-path-from-shell org-trello indent-guide ag lsp-ui cargo racer flycheck-rust use-package rust-mode rainbow-delimiters projectile org-bullets neotree multiple-cursors magit howdoi haskell-mode flycheck diminish dashboard company))
   (mapc (lambda (x) (unless (package-installed-p x)
                  (package-install x))) packages))
 
