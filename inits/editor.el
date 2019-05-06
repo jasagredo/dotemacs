@@ -8,7 +8,7 @@
 ;;;; Indent
 (use-package indent-guide
   :config
-  (add-hook 'prog-major-mode 'indent-guide-mode))
+  (add-hook 'prog-mode-hook 'indent-guide-mode))
 
 ;;;; Neotree
 (use-package neotree
