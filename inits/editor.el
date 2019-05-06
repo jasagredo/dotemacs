@@ -5,6 +5,11 @@
   :diminish undo-tree-mode " Ⓤ "
   :config
   (global-undo-tree-mode))
+;;;; Indent
+(use-package indent-guide
+  :config
+  (add-hook 'prog-major-mode 'indent-guide-mode))
+
 ;;;; Neotree
 (use-package neotree
   :config
@@ -36,7 +41,3 @@
   (ido-mode t))
 ;;;; Remove trailing whitespace on saving
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
-;;; Indent Guide
-(use-package indent-guide
-  :config
-  (indent-guide-global-mode t))
