@@ -1,5 +1,10 @@
 ;; Editing
 
+;;;; Undo-tree
+(use-package undo-tree
+  :diminish undo-tree-mode " Ⓤ "
+  :config
+  (global-undo-tree-mode))
 ;;;; Neotree
 (use-package neotree
   :config

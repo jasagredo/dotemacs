@@ -5,6 +5,7 @@
   :init (progn
           (setq projectile-enable-caching nil)
           (setq projectile-switch-project-action 'projectile-dired))
-  :config (progn
-            (projectile-mode +1)
-            (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)))
+  :config
+  (global-set-key "" (quote projectile-run-eshell))
+  (progn (projectile-mode)
+         (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)))

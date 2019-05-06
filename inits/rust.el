@@ -40,6 +40,6 @@
   :config
   (add-hook 'rust-mode-hook 'cargo-minor-mode)
   (setq cargo-process--command-build "build")
-  (setq cargo-process--command-clippy "+nightly clippy --all")
+  (setq cargo-process--command-clippy "clippy --all")
   (setq cargo-process--command-fmt "+nightly fmt")
   (setq cargo-process--enable-rust-backtrace t))
