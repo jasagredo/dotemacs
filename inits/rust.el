@@ -29,7 +29,7 @@
   (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
 (use-package racer
-  :diminish racer-mode " ® "
+  :diminish racer-mode " Ⓡ "
   :config
   (add-hook 'rust-mode-hook #'racer-mode)
   (add-hook 'racer-mode-hook #'eldoc-mode)

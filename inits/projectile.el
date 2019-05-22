@@ -7,5 +7,5 @@
           (setq projectile-switch-project-action 'projectile-dired))
   :config
   (global-set-key "" (quote projectile-run-eshell))
-  (progn (projectile-mode)
-         (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)))
+  (projectile-mode 1)
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))

@@ -5,7 +5,7 @@
 (package-initialize)
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
-  (setq packages '(indent-guide ag lsp-ui cargo racer flycheck-rust use-package rust-mode rainbow-delimiters projectile org-bullets neotree multiple-cursors magit howdoi haskell-mode flycheck diminish dashboard company))
+  (setq packages '(carbon-now-sh hydra avy slime undo-tree exec-path-from-shell indent-guide ag lsp-ui cargo racer flycheck-rust use-package rust-mode rainbow-delimiters projectile org-bullets neotree multiple-cursors magit howdoi haskell-mode flycheck diminish dashboard company))
   (mapc (lambda (x) (unless (package-installed-p x)
                  (package-install x))) packages))
 
@@ -19,3 +19,4 @@
 (mapc (lambda (x) (let ((te (time-to-seconds (current-time))))
 		    (load x)
 		    (message "Init time for %s: %s" x (- (time-to-seconds (current-time)) te)))) inits)
+(gdb-many-windows)

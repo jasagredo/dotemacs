@@ -12,5 +12,4 @@
   (setq dashboard-startup-banner 'logo)
   (dashboard-setup-startup-hook)
   (setq dashboard-items '((recents  . 5)
-                          (bookmarks . 5)
-                          )))
+                          (bookmarks . 5))))

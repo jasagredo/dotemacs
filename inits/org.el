@@ -5,7 +5,7 @@
          ("C-c a" . org-agenda))
   :init (progn
           (setq org-directory "~/Dropbox/org")
-          (setq org-agenda-files (cons "~/Dropbox/org/notes.org" (cons "~/Dropbox/org/p2p.org" (directory-files-recursively "~/Dropbox/org/agenda/" "\.org$"))))
+          (setq org-agenda-files (cons "~/Dropbox/org/notes.org" (directory-files-recursively "~/Dropbox/org/agenda/" "\.org$")))
           (setq org-default-notes-file (concat org-directory "/notes.org"))
           (setq org-capture-templates
                 '(("t" "Todo" entry (file+headline org-default-notes-file "Tasks") "* TODO %?\n  %i\n  %a")
