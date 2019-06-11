@@ -34,8 +34,11 @@
 
 ;;;; Editor
 (column-number-mode t)
-(global-linum-mode)
-
+;;(global-linum-mode)
+(use-package linum-relative
+  :config
+  (linum-relative-global-mode)
+  (setq linum-relative-current-symbol ""))
 ;;;; Autocomplete
 (use-package company
   :ensure t
@@ -62,4 +65,8 @@
   :ensure t)
 
 ;; Font size
-(set-face-attribute 'default nil :height 135)
+(set-face-attribute 'default nil :height 230)
+
+(use-package which-key
+  :config
+  (which-key-mode t))

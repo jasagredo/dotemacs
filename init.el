@@ -19,4 +19,7 @@
 (mapc (lambda (x) (let ((te (time-to-seconds (current-time))))
 		    (load x)
 		    (message "Init time for %s: %s" x (- (time-to-seconds (current-time)) te)))) inits)
-(gdb-many-windows)
+(setq recentf-exclude (org-agenda-files))
+
+(bind-key (kbd "C-x k") #'kill-this-buffer)
+(put 'dired-find-alternate-file 'disabled nil)
