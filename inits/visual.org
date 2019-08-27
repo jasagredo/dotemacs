@@ -1,0 +1,98 @@
+* Visual and navigation
+Tweak Emacs appearance
+** Start maximized
+Why even start in a small window?
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+#+END_SRC
+** Show full file name
+I want the full path of a file to be shown in the title of the window, showing only the name is of no use.
+#+BEGIN_SRC emacs-lisp
+(setq frame-title-format '(:eval (if (buffer-file-name) (abbreviate-file-name (buffer-file-name)) "%b")))
+#+END_SRC
+
+** Rainbow delimiters
+Colorize the parenthesis levels
+#+BEGIN_SRC emacs-lisp
+(use-package rainbow-delimiters
+  :ensure t
+  :init (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+#+END_SRC
+** Theme
+#+BEGIN_SRC emacs-lisp
+(use-package doom-themes
+  :ensure t
+  :config
+  (load-theme 'doom-tomorrow-night t))
+#+END_SRC
+
+** Mouse scroll
+This is said to make mouse scrolling more swift
+#+BEGIN_SRC emacs-lisp
+(setq mouse-wheel-follow-mouse 't)
+(setq scroll-conservatively 101)
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
+#+END_SRC
+
+** Parens
+It indicates in red the matching parenthesis of the one selected
+#+BEGIN_SRC emacs-lisp
+(show-paren-mode 1)
+(setq show-paren-delay 0)
+#+END_SRC
+
+** Indicators and menus
+Who wants visual menus?
+#+BEGIN_SRC emacs-lisp
+(tool-bar-mode -1)
+(toggle-scroll-bar -1)
+#+END_SRC
+
+** Autocomplete
+Company shows tooltips for completing on point
+#+BEGIN_SRC emacs-lisp
+(use-package company
+  :ensure t
+  :diminish company-mode " Ⓒ "
+  :init (global-company-mode)
+  :config (progn
+                (setq company-idle-delay .3)
+                (setq company-echo-delay 0)
+                (setq company-tooltip-limit 15)
+                (setq company-minimum-prefix-length 1)
+                (setq company-dabbrev-downcase nil)))
+#+END_SRC
+
+** Sound
+Why does this even exist?
+#+BEGIN_SRC emacs-lisp
+(setq ring-bell-function 'ignore)
+#+END_SRC
+
+** Prettify
+I love lambdas to be shown as a greek letter
+#+BEGIN_SRC emacs-lisp
+(global-prettify-symbols-mode)
+#+END_SRC
+
+** Diminish
+Diminish allows to replace a minor mode icon in the powerline with an icon for having more concise information
+#+BEGIN_SRC emacs-lisp
+(use-package diminish)
+#+END_SRC
+
+** All-the-icons
+Let's also add icons to emacs (mainly useful for neo-tree)
+#+BEGIN_SRC emacs-lisp
+(use-package all-the-icons
+  :ensure t)
+#+END_SRC
+
+** Font size
+#+BEGIN_SRC emacs-lisp
+(set-face-attribute 'default nil :height 200)
+#+END_SRC
+** Line numbers
+#+BEGIN_SRC emacs-lisp
+(setq global-linum-mode t)
+#+END_SRC

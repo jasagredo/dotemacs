@@ -1,4 +1,6 @@
-;; Org
+* Org
+
+#+BEGIN_SRC emacs-lisp
 (use-package org
   :ensure t
   :bind (("C-c c" . org-capture)
@@ -15,8 +17,12 @@
           (setq org-directory "~/Dropbox/org")
           (setq org-mobile-inbox-for-pull "~/Dropbox/org/inbox.org")
           (setq org-mobile-directory "~/Dropbox/Aplicaciones/MobileOrg")
-          (setq org-mobile-files '("~/Dropbox/org")))
-  :config
+          (setq org-mobile-files '("~/Dropbox/org"))))
+#+END_SRC
+
+We also add org-bullets to be able to show beatiful bullet points
+#+BEGIN_SRC emacs-lisp
   (use-package org-bullets
     :ensure t
-    :config (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))))
+    :config (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+#+END_SRC
