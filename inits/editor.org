@@ -136,7 +136,6 @@ Obtained from https://tuhdo.github.io/helm-intro.html
 #+BEGIN_SRC emacs-lisp
 (require 'helm)
 (require 'helm-config)
-(diminish 'helm-mode " Ⓗ ")
 
 ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
 ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
@@ -174,6 +173,7 @@ Obtained from https://tuhdo.github.io/helm-intro.html
 (helm-autoresize-mode 1)
 
 (helm-mode 1)
+(diminish 'helm-mode " Ⓗ ")
 
 (helm-autoresize-mode t)
 
