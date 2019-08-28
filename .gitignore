@@ -11,5 +11,7 @@ transient/
 .mc-lists.el
 .org-id-locations
 eshell/
-inits/gdb.el
+inits/*.el
 tramp
+*~
+custom.el

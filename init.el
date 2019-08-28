@@ -42,6 +42,8 @@
                    which-key            ;; learn new key commands
                    carbon-now-sh        ;; code snapshots
                    org-bullets          ;; UTF bullets in org mode
+                   all-the-icons        ;; pretty icons for my editor
+                   cheatsheet           ;; friendly cheatsheet
                    deadgrep             ;; ripgrep
                    ))
   (mapc (lambda (x) (unless (package-installed-p x)
