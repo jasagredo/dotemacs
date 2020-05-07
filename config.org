@@ -1,356 +1,338 @@
 * Configuration file for emacs
 ** Builtin emacs customizations
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'default-frame-alist '(fullscreen . maximized)) ;; I prefer my emacs to start maximized [https://emacs.stackexchange.com/questions/2999/how-to-maximize-my-emacs-frame-on-start-up]
-(setq frame-title-format '(:eval (if (buffer-file-name) (abbreviate-file-name (buffer-file-name)) "%b")))  ;; This shows the full path to the current file in the title of the window
-      mouse-wheel-follow-mouse 't   ;; Make scroll more smooth (presumably)
-      scroll-conservatively 101
-      mouse-wheel-scroll-amount '(1 ((shift) . 1))
-(show-paren-mode 1)  ;; Highlight the matching parenthesis with a delay of 0
-(setq show-paren-delay 0)
-(menu-bar-mode -1)   ;; Remove the mouse elements on the UI (bars and menus)
-(tool-bar-mode -1)
-(toggle-scroll-bar -1)
-(setq ring-bell-function 'ignore) ;; Disable the bell (why does this even exist?)
-(global-prettify-symbols-mode) ;; Prettify some symbols (usually each mode adds its own symbols)
-(set-face-attribute 'default nil :height 120) ;; Set the font height
-(global-linum-mode) ;; Always show line numbers and column numbers
-(column-number-mode)
-(setq create-lockfiles nil) ;; This removes the numerous lock and backup files emacs creates
-(setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
-  backup-by-copying t
-  version-control t
-  delete-old-versions t
-  kept-new-versions 20
-  kept-old-versions 5)
-(add-hook 'before-save-hook 'delete-trailing-whitespace) ;; Remove trailing ws on save
-(delete-selection-mode) ;; So that we replace text when pasting
-(bind-key (kbd "C-x k") #'kill-this-buffer) ;; Remove confirmation when killing current buffer
-(setq-default indent-tabs-mode nil) ;; Never use tabs
-(defalias 'yes-or-no-p 'y-or-n-p) ;; Answer y/n instead of yes/no
-(use-package dired ;; force dired to use the same buffer
-  :config
-  (define-key dired-mode-map [mouse-2] 'dired-find-alternate-file)
-  (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file)
-  (define-key dired-mode-map (kbd "^") (lambda () (interactive) (find-alternate-file "..")))
-  (put 'dired-find-alternate-file 'disabled nil))
-#+END_SRC
-
+   #+BEGIN_SRC emacs-lisp
+   ;; I prefer my emacs to start maximized [https://emacs.stackexchange.com/questions/2999/how-to-maximize-my-emacs-frame-on-start-up]
+   (add-to-list 'default-frame-alist '(fullscreen . maximized))
+   ;; This shows the full path to the current file in the title of the window
+   (setq frame-title-format '(:eval (if (buffer-file-name) (abbreviate-file-name (buffer-file-name)) "%b")))
+         ;; Make scroll more smooth (presumably)
+         mouse-wheel-follow-mouse 't
+         scroll-conservatively 101
+         mouse-wheel-scroll-amount '(1 ((shift) . 1)
+         ;; show matching parenthesis immediately
+         show-paren-delay 0
+         ;; Disable the bell (why does this even exist?)
+         ring-bell-function 'ignore
+         ;; This removes the numerous lock and backup files emacs creates
+         create-lockfiles nil
+         backup-directory-alist '(("." . "~/.emacs.d/backup"))
+         backup-by-copying t
+         version-control t
+         delete-old-versions t
+         kept-new-versions 20
+         kept-old-versions 5
+   )
+   ;; Highlight the matching parenthesis with a delay of 0
+   (show-paren-mode 1)
+   ;; Remove the mouse elements on the UI (bars and menus)
+   (menu-bar-mode -1)
+   (tool-bar-mode -1)
+   (toggle-scroll-bar -1)
+   ;; Prettify some symbols (usually each mode adds its own symbols)
+   (global-prettify-symbols-mode)
+   ;; Set the font height
+   (set-face-attribute 'default nil :height 120)
+   ;; Always show line numbers and column numbers
+   (global-linum-mode)
+   (column-number-mode)
+   ;; Remove trailing ws on save
+   (add-hook 'before-save-hook 'delete-trailing-whitespace)
+   ;; So that we replace text when pasting
+   (delete-selection-mode)
+   ;; Remove confirmation when killing current buffer
+   (bind-key (kbd "C-x k") #'kill-this-buffer)
+   ;; Never use tabs
+   (setq-default indent-tabs-mode nil)
+   ;; Answer y/n instead of yes/no
+   (defalias 'yes-or-no-p 'y-or-n-p)
+   ;; force dired to use the same buffer
+   (use-package dired
+     :ensure nil
+     :config
+     (define-key dired-mode-map [mouse-2] 'dired-find-alternate-file)
+     (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file)
+     (define-key dired-mode-map (kbd "^") (lambda () (interactive) (find-alternate-file "..")))
+     (put 'dired-find-alternate-file 'disabled nil))
+   #+END_SRC
+*** Org
+   #+begin_src emacs-lisp
+   (use-package org
+      :custom (org-export-backends '(ascii html icalendar latex md odt)))
+   #+end_src
 ** Packages
 *** Visual
 **** Doom themes
-  An opinionated pack of modern color-themes
-  #+BEGIN_SRC emacs-lisp
-  (use-package doom-themes
-    :ensure t
-    :config
-    (load-theme 'doom-challenger-deep t))
-  #+END_SRC
+     An opinionated pack of modern color-themes
+     #+BEGIN_SRC emacs-lisp
+     (use-package doom-themes
+       :config (load-theme 'doom-horizon t))
+     #+END_SRC
 **** All the icons
-  A library for inserting Developer icons
-  #+BEGIN_SRC emacs-lisp
-  (use-package all-the-icons
-    :ensure t)
-  #+END_SRC
+     A library for inserting Developer icons
+     #+BEGIN_SRC emacs-lisp
+     (use-package all-the-icons)
+     #+END_SRC
 **** Diminish
-  Diminished modes are minor modes with no modeline display
-  #+BEGIN_SRC emacs-lisp
-  (use-package diminish)
-  #+END_SRC
+     Diminished modes are minor modes with no modeline display
+     #+BEGIN_SRC emacs-lisp
+     (use-package diminish)
+     #+END_SRC
 **** Rainbow delimiters
-  Highlight brackets according to their depth
-  #+BEGIN_SRC emacs-lisp
-  (use-package rainbow-delimiters
-    :ensure t
-    :init (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
-  #+END_SRC
+     Highlight brackets according to their depth
+     #+BEGIN_SRC emacs-lisp
+     (use-package rainbow-delimiters
+       :hook (prog-mode . rainbow-delimiters-mode))
+     #+END_SRC
 **** Dashboard
-  A startup screen extracted from Spacemacs
-  #+BEGIN_SRC emacs-lisp
-  (use-package dashboard
-    :init
-    (add-hook 'after-init-hook 'dashboard-refresh-buffer)
-    :config
-    (dashboard-setup-startup-hook)
-    (setq dashboard-items '((recents  . 10)
-                            (bookmarks . 5)
-                            (projects . 10)))
-    (setq dashboard-set-heading-icons t)
-    (setq dashboard-set-file-icons t))
-  #+END_SRC
+     A startup screen extracted from Spacemacs
+     #+BEGIN_SRC emacs-lisp
+     (use-package dashboard
+       :hook (after-init . dashboard-refresh-buffer)
+       :config (dashboard-setup-startup-hook)
+       :custom (dashboard-items '((recents  . 10)
+                                  (bookmarks . 5)
+                                  (projects . 10)))
+               (dashboard-set-heading-icons t)
+               (dashboard-set-file-icons t))
+     #+END_SRC
 **** Org-bullets
-Show bullets in org-mode as UTF-8 characters
-#+BEGIN_SRC emacs-lisp
-(use-package org-bullets
-   :config
-   (add-hook 'org-mode-hook 'org-bullets-mode))
-#+END_src
+     Show bullets in org-mode as UTF-8 characters
+     #+BEGIN_SRC emacs-lisp
+     (use-package org-bullets
+        :hook (org-mode . org-bullets-mode))
+     #+END_src
 *** Editing utilities
 **** Company autocomplete
-  Modular text completion framework
-  #+BEGIN_SRC emacs-lisp
-  (use-package company
-    :ensure t
-    :diminish company-mode " Ⓒ "
-    :init (global-company-mode)
-    :config (setq company-idle-delay .3
-                  company-echo-delay 0
-                  company-tooltip-limit 15
-                  company-minimum-prefix-length 1
-                  company-dabbrev-downcase nil))
-  #+END_SRC
+     Modular text completion framework
+     #+BEGIN_SRC emacs-lisp
+     (use-package company
+       :ensure t
+       :diminish company-mode " Ⓒ "
+       :init (global-company-mode)
+       :config (setq company-idle-delay .3
+                     company-echo-delay 0
+                     company-tooltip-limit 15
+                     company-minimum-prefix-length 1
+                     company-dabbrev-downcase nil))
+     #+END_SRC
 **** Undo-tree
-  Treat undo history as a tree
-  #+BEGIN_SRC emacs-lisp
-  (use-package undo-tree
-    :diminish undo-tree-mode " Ⓤ "
-    :config
-    (global-undo-tree-mode))
-  #+END_SRC
+     Treat undo history as a tree
+     #+BEGIN_SRC emacs-lisp
+     (use-package undo-tree
+       :diminish undo-tree-mode " Ⓤ "
+       :config (global-undo-tree-mode))
+     #+END_SRC
 **** Indent-guide
-  Show vertical lines to guide indentation
-  #+BEGIN_SRC emacs-lisp
-  (use-package indent-guide
-    :config
-    (add-hook 'prog-mode-hook 'indent-guide-mode))
-  #+END_SRC
+     Show vertical lines to guide indentation
+     #+BEGIN_SRC emacs-lisp
+     (use-package indent-guide
+       :hook (prog-mode . indent-guide-mode))
+     #+END_SRC
 **** Multiple cursors
-  Multiple cursors for Emacs
-  #+BEGIN_SRC emacs-lisp
-  (use-package multiple-cursors
-    :config
-    (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines))
-  #+END_SRC
+     Multiple cursors for Emacs
+     #+BEGIN_SRC emacs-lisp
+     (use-package multiple-cursors
+       :bind ("C-S-c C-S-c" . mc/edit-lines))
+     #+END_SRC
 **** Ace-window
-  Quickly switch windows
-  #+BEGIN_SRC emacs-lisp
-  (use-package ace-window
-    :config
-    (global-set-key (kbd "M-o") 'ace-window))
-  #+END_SRC
+     Quickly switch windows
+     #+BEGIN_SRC emacs-lisp
+     (use-package ace-window
+       :bind ("M-o" . ace-window))
+     #+END_SRC
 **** Which key
-  Display available keybindings in popup
-  #+BEGIN_SRC emacs-lisp
-  (use-package which-key
-    :diminish which-key-mode " Ⓦ "
-    :config
-    (which-key-mode))
-  #+END_SRC
+     Display available keybindings in popup
+     #+BEGIN_SRC emacs-lisp
+     (use-package which-key
+       :diminish which-key-mode " Ⓦ "
+       :config (which-key-mode))
+     #+END_SRC
 **** Beacon
-Highlight the cursor whenever the window scrolls
-  #+BEGIN_SRC emacs-lisp
-  (use-package beacon
-    :config
-    (add-hook #'prog-major-mode-hook 'beacon-mode))
-  #+END_SRC
+     Highlight the cursor whenever the window scrolls
+       #+BEGIN_SRC emacs-lisp
+       (use-package beacon
+         :hook (prog-mode . beacon-mode))
+       #+END_SRC
 **** Anzu
-Show number of matches in mode-line while searching
-  #+BEGIN_SRC emacs-lisp
-  (use-package anzu
-    :config
-    (global-anzu-mode))
-  #+END_SRC
+     Show number of matches in mode-line while searching
+     #+BEGIN_SRC emacs-lisp
+     (use-package anzu
+       :config (global-anzu-mode))
+     #+END_SRC
 *** Project and external tools
 **** Deadgrep
-  Fast, friendly searching with ripgrep
-  #+BEGIN_SRC emacs-lisp
-   (use-package deadgrep
-     :config
-     (global-set-key (kbd "<f5>") #'deadgrep))
-   #+END_SRC
+     Fast, friendly searching with ripgrep
+     #+BEGIN_SRC emacs-lisp
+     (use-package deadgrep
+       :bind ("<f3>" . deadgrep))
+     #+END_SRC
 **** Magit
-  A Git porcelain inside Emacs
-  #+BEGIN_SRC emacs-lisp
-  (use-package magit
-    :config
-    (global-set-key (kbd "C-x g") 'magit-status))
-  #+END_SRC
+     A Git porcelain inside Emacs
+     #+BEGIN_SRC emacs-lisp
+     (use-package magit
+       :bind ("C-x g" . magit-status))
+     #+END_SRC
 **** PATH & related variables
-  Get environment variables such as $PATH from the shell
-  #+BEGIN_SRC emacs-lisp
-  (use-package exec-path-from-shell
-    :config
-    (setq exec-path-from-shell-variables (quote ("PATH" "MANPATH" "LD_LIBRARY_PATH" "LIBRARY_PATH")))
-    (exec-path-from-shell-initialize))
-  #+END_SRC
+     Get environment variables such as $PATH from the shell
+     #+BEGIN_SRC emacs-lisp
+     (use-package exec-path-from-shell
+       :custom (exec-path-from-shell-variables '("PATH" "MANPATH" "LD_LIBRARY_PATH" "LIBRARY_PATH"))
+       :config (exec-path-from-shell-initialize))
+     #+END_SRC
 **** Flycheck
-  On-the-fly syntax checking
-   #+BEGIN_SRC emacs-lisp
-   (use-package flycheck
-     :ensure t
-     :diminish flycheck-mode " ✈ "
-     :config (add-hook 'after-init-hook #'global-flycheck-mode))
-   #+END_SRC
+     On-the-fly syntax checking
+     #+BEGIN_SRC emacs-lisp
+     (use-package flycheck
+       :diminish flycheck-mode " ✈ "
+       :hook (after-init . global-flycheck-mode))
+     #+END_SRC
 **** Projectile
-   Manage and navigate projects in Emacs easily
-   #+BEGIN_SRC emacs-lisp
-   (use-package projectile
-     :ensure t
-     :diminish projectile-mode " Ⓟ "
-     :init (progn
-             (setq projectile-enable-caching nil)
-             (setq projectile-switch-project-action 'projectile-dired))
-     :config
-     (projectile-mode)
-     (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
-   #+END_SRC
+     Manage and navigate projects in Emacs easily
+     #+BEGIN_SRC emacs-lisp
+     (use-package projectile
+       :diminish projectile-mode " Ⓟ "
+       :custom (projectile-enable-caching nil)
+               (projectile-switch-project-action 'projectile-dired)
+       :bind-keymap ("C-c p" . projectile-command-map)
+       :config (projectile-mode))
+     #+END_SRC
 **** Treemacs
-   #+BEGIN_SRC emacs-lisp
-(use-package treemacs
-   :bind
-   (:map global-map
-        ("<f2>" . treemacs)))
+     #+BEGIN_SRC emacs-lisp
+     (use-package treemacs
+        :bind ("<f2>" . treemacs))
 
-(use-package treemacs-projectile
-   :after treemacs projectile
-   :ensure t)
+     (use-package treemacs-projectile
+        :after treemacs projectile)
 
-(use-package treemacs-magit
-   :after treemacs magit
-   :ensure t)
-   #+END_SRC
+     (use-package treemacs-magit
+        :after treemacs magit)
+      #+END_SRC
 
 *** Helm
- Helm is an Emacs incremental and narrowing framework. Obtained from https://tuhdo.github.io/helm-intro.html
- #+BEGIN_SRC emacs-lisp
- (require 'helm)
- (require 'helm-config)
+    Helm is an Emacs incremental and narrowing framework. Obtained from https://tuhdo.github.io/helm-intro.html
+    #+BEGIN_SRC emacs-lisp
+    (require 'helm)
+    (require 'helm-config)
 
- ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
- ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
- ;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
- (global-set-key (kbd "C-c h") 'helm-command-prefix)
- (global-unset-key (kbd "C-x c"))
+    ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
+    ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
+    ;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
+    (global-set-key (kbd "C-c h") 'helm-command-prefix)
+    (global-unset-key (kbd "C-x c"))
 
- (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
- (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB work in terminal
- (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+    (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
+    (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB work in terminal
+    (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
 
- (setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
-       helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
-       helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
-       helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
-       helm-ff-file-name-history-use-recentf t
-       helm-echo-input-in-header-line t)
+    (setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
+          helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
+          helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
+          helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
+          helm-ff-file-name-history-use-recentf t
+          helm-echo-input-in-header-line t)
 
- (defun helm-hide-minibuffer-maybe ()
-   "Hide minibuffer in Helm session if we use the header line as input field."
-   (when (with-helm-buffer helm-echo-input-in-header-line)
-     (let ((ov (make-overlay (point-min) (point-max) nil nil t)))
-       (overlay-put ov 'window (selected-window))
-       (overlay-put ov 'face
-                    (let ((bg-color (face-background 'default nil)))
-                      `(:background ,bg-color :foreground ,bg-color)))
-       (setq-local cursor-type nil))))
+    (defun helm-hide-minibuffer-maybe ()
+      "Hide minibuffer in Helm session if we use the header line as input field."
+      (when (with-helm-buffer helm-echo-input-in-header-line)
+        (let ((ov (make-overlay (point-min) (point-max) nil nil t)))
+          (overlay-put ov 'window (selected-window))
+          (overlay-put ov 'face
+                       (let ((bg-color (face-background 'default nil)))
+                         `(:background ,bg-color :foreground ,bg-color)))
+          (setq-local cursor-type nil))))
 
 
- (add-hook 'helm-minibuffer-set-up-hook
-           'helm-hide-minibuffer-maybe)
+    (add-hook 'helm-minibuffer-set-up-hook
+              'helm-hide-minibuffer-maybe)
 
- (setq helm-autoresize-max-height 0)
- (setq helm-autoresize-min-height 20)
- (helm-autoresize-mode 1)
+    (setq helm-autoresize-max-height 0)
+    (setq helm-autoresize-min-height 20)
+    (helm-autoresize-mode 1)
 
- (helm-mode 1)
- (require 'diminish)
- (diminish 'helm-mode " Ⓗ ")
+    (helm-mode 1)
+    (require 'diminish)
+    (diminish 'helm-mode " Ⓗ ")
 
- (helm-autoresize-mode t)
+    (global-set-key (kbd "M-x") 'helm-M-x)
+    (setq helm-M-x-fuzzy-match t) ;; optional fuzzy matching for helm-M-x
 
- (global-set-key (kbd "M-x") 'helm-M-x)
- (setq helm-M-x-fuzzy-match t) ;; optional fuzzy matching for helm-M-x
+    (global-set-key (kbd "M-y") 'helm-show-kill-ring)
 
- (global-set-key (kbd "M-y") 'helm-show-kill-ring)
+    (global-set-key (kbd "C-x b") 'helm-mini)
+    (setq helm-buffers-fuzzy-matching t
+          helm-recentf-fuzzy-match    t)
 
- (global-set-key (kbd "C-x b") 'helm-mini)
- (setq helm-buffers-fuzzy-matching t
-       helm-recentf-fuzzy-match    t)
-
- (global-set-key (kbd "C-x C-f") 'helm-find-files)
-
- #+END_SRC
+    (global-set-key (kbd "C-x C-f") 'helm-find-files)
+    #+END_SRC
 ** Programming
 *** Rust
-#+BEGIN_SRC emacs-lisp
-(use-package rust-mode  ;;A major emacs mode for editing Rust source code
-  :config
-  (setq rust-rustfmt-bin "~/.rustup/toolchains/nightly-2019-03-22-x86_64-unknown-linux-gnu/bin/rustfmt")
-  (setq rust-format-on-save t)
-  (define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)
-  (setq company-tooltip-align-annotations t)
-  (add-hook 'rust-mode-hook #'flycheck-mode)
-  (add-hook 'rust-mode-hook 'hs-minor-mode)
-  (add-hook 'rust-mode-hook 'lsp))
+    #+BEGIN_SRC emacs-lisp
+    (use-package rust-mode  ;;A major emacs mode for editing Rust source code
+      :config
+      (setq rust-rustfmt-bin "~/.rustup/toolchains/nightly-2019-11-13-x86_64-unknown-linux-gnu/bin/rustfmt")
+      (setq rust-format-on-save t)
+      (define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)
+      (setq company-tooltip-align-annotations t)
+      (add-hook 'rust-mode-hook #'flycheck-mode)
+      (add-hook 'rust-mode-hook 'hs-minor-mode))
 
-(use-package flycheck-rust) ;; Flycheck: Rust additions and Cargo support
-(with-eval-after-load 'rust-mode
-  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+    (use-package flycheck-rust) ;; Flycheck: Rust additions and Cargo support
+    (with-eval-after-load 'rust-mode
+      (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
-(use-package racer  ;; Code completion, goto-definition and docs browsing for Rust via racer
-    :diminish racer-mode " Ⓡ "
-    :config
-    (add-hook 'rust-mode-hook #'racer-mode)
-    (add-hook 'racer-mode-hook #'eldoc-mode)
-    (add-hook 'racer-mode-hook #'company-mode))
+    (use-package racer  ;; Code completion, goto-definition and docs browsing for Rust via racer
+        :diminish racer-mode " Ⓡ "
+        :config
+        (add-hook 'rust-mode-hook #'racer-mode)
+        (add-hook 'racer-mode-hook #'eldoc-mode)
+        (add-hook 'racer-mode-hook #'company-mode))
 
-(use-package cargo    ;; Emacs Minor Mode for Cargo, Rust's Package Manager
-  :diminish cargo-mode " Ⓖ "
-  :config
-  (add-hook 'rust-mode-hook 'cargo-minor-mode)
-  (setq cargo-process--command-build "build")
-  (setq cargo-process--command-clippy "clippy --all")
-  (setq cargo-process--command-fmt "+nightly fmt")
-  (setq cargo-process--enable-rust-backtrace t))
-#+END_SRC
-*** LSP
-Currently we will only use LSP on Rust with Rust-analyzer. Hopefully one day HIE will be usable.
-#+BEGIN_SRC emacs-lisp
-(use-package lsp-mode
-  :ensure t
-  :init
-  (add-hook 'rust-mode-hook #'lsp-prog-major-mode-enable)
-  :config
-  (setq lsp-rust-rls-command 'rust-analyzer)
-  (setq lsp-prefer-flymake nil)
-  (setq lsp-enable-snippet nil))
-(use-package lsp-ui
-  :ensure t
-  :init
-  (add-hook 'lsp-mode-hook 'lsp-ui-mode)
-  :config
-  (setq lsp-ui-imenu-kind-position (quote left)))
-#+END_SRC
-
+    (use-package cargo    ;; Emacs Minor Mode for Cargo, Rust's Package Manager
+      :diminish cargo-mode " Ⓖ "
+      :config
+      (add-hook 'rust-mode-hook 'cargo-minor-mode)
+      (setq cargo-process--command-build "build")
+      (setq cargo-process--command-clippy "clippy --all")
+      (setq cargo-process--command-fmt "+nightly fmt")
+      (setq cargo-process--enable-rust-backtrace t))
+    #+END_SRC
 *** Haskell
-    First we configure w3m as done in http://haskell.github.io/haskell-mode/manual/latest/Browsing-Haddocks.html#Browsing-Haddocks
-#+BEGIN_SRC emacs-lisp
-(setq w3m-mode-map (make-sparse-keymap))
+    #+BEGIN_SRC emacs-lisp
+    (use-package haskell-mode
+      :bind ("<f3>" . haskell-compile)
+      :custom (haskell-stylish-on-save nil) ;; Don't use stylish haskell
+              (haskell-tags-on-save t)      ;; Update the TAGS file
+              (haskell-font-lock-symbols t) ;; Beautify some symbols
+              (haskell-compile-cabal-build-command "stack build") ;; Always use stack
+              (haskell-compile-cabal-build-command-alt "stack clean --full"))
+    #+END_SRC
+*** Elm
+    #+begin_src emacs-lisp
+    (use-package elm-mode)
+    #+end_src
+*** LSP
+    #+BEGIN_SRC emacs-lisp
+    (use-package lsp-mode
+      :commands lsp
+      :hook ((rust-mode . lsp)
+             (haskell-mode . lsp)
+             (elm-mode . lsp)
+             (lsp-mode . lsp-enable-which-key-integration))
+      :custom (lsp-rust-server 'rust-analyzer)
+              (lsp-keymap-prefix "C-x C-l")
+              (lsp-enable-snippet nil))
 
-(define-key w3m-mode-map (kbd "RET") 'w3m-view-this-url)
-(define-key w3m-mode-map (kbd "q") 'bury-buffer)
-(define-key w3m-mode-map (kbd "<mouse-1>") 'w3m-maybe-url)
-(define-key w3m-mode-map [f5] 'w3m-reload-this-page)
-(define-key w3m-mode-map (kbd "C-c C-d") 'haskell-w3m-open-haddock)
-(define-key w3m-mode-map (kbd "M-<left>") 'w3m-view-previous-page)
-(define-key w3m-mode-map (kbd "M-<right>") 'w3m-view-next-page)
-(define-key w3m-mode-map (kbd "M-.") 'w3m-haddock-find-tag)
+    (setq company-minimum-prefix-length 1
+          company-idle-delay 0.0)
+    (setq gc-cons-threshold 100000000)
+    (setq read-process-output-max (* 1024 1024))
 
-(defun w3m-maybe-url ()
-  (interactive)
-  (if (or (equal '(w3m-anchor) (get-text-property (point) 'face))
-          (equal '(w3m-arrived-anchor) (get-text-property (point) 'face)))
-      (w3m-view-this-url)))
-#+END_SRC
-And then we configure the mode itself
-#+BEGIN_SRC emacs-lisp
-(use-package haskell-mode
-  :config
-  (setq haskell-stylish-on-save nil) ;; Don't use stylish haskell
-  (setq haskell-tags-on-save t)      ;; Update the TAGS file
-  (setq haskell-font-lock-symbols t) ;; Beautify some symbols
-  (setq haskell-compile-cabal-build-command "stack build") ;; Always use stack
-  (setq haskell-compile-cabal-build-command-alt "stack clean")
-  (require 'w3m-haddock)
-  (add-hook 'w3m-display-hook 'w3m-haddock-display)
-  (define-key haskell-mode-map (kbd "C-c C-d") 'haskell-w3m-open-haddock))
-#+END_SRC
+    (use-package lsp-ui
+      :hook (lsp-mode . lsp-ui-mode)
+      :custom (lsp-ui-doc-header t)
+              (lsp-ui-doc-include-signature t)
+              (lsp-ui-doc-position 'top))
+
+    (use-package lsp-treemacs
+      :hook (lsp-mode . lsp-treemacs-sync-mode))
+    #+END_SRC

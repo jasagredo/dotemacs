@@ -15,3 +15,6 @@ inits/*.el
 tramp
 *~
 custom.el
+.cache
+config.el
+session.*

@@ -11,7 +11,8 @@
 ;; Add melpa
 (add-to-list 'package-archives (cons "melpa" "https://melpa.org/packages/") t)
 (package-initialize)
-
+(require 'use-package-ensure)
+(setq use-package-always-ensure t)
 (unless (package-installed-p 'use-package)
   (setq package-check-signature nil)
   (package-refresh-contents)
@@ -66,5 +67,4 @@
 (load "prolog")
 (load "ghcid")
 
-(org-babel-load-file "config.org")
-
+(org-babel-load-file "~/.emacs.d/config.org")
