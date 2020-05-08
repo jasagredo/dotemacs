@@ -18,3 +18,4 @@ custom.el
 .cache
 config.el
 session.*
+*.sqlite

@@ -53,12 +53,21 @@
      (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file)
      (define-key dired-mode-map (kbd "^") (lambda () (interactive) (find-alternate-file "..")))
      (put 'dired-find-alternate-file 'disabled nil))
+   ;; Use shift+arrows to move between windows
+   (windmove-default-keybindings)
    #+END_SRC
 *** Org
    #+begin_src emacs-lisp
    (use-package org
       :custom (org-export-backends '(ascii html icalendar latex md odt)))
    #+end_src
+*** PATH & related variables
+    Get environment variables such as $PATH from the shell
+    #+BEGIN_SRC emacs-lisp
+    (use-package exec-path-from-shell
+      :custom (exec-path-from-shell-variables '("PATH" "MANPATH" "LD_LIBRARY_PATH" "LIBRARY_PATH"))
+      :config (exec-path-from-shell-initialize))
+    #+END_SRC
 ** Packages
 *** Visual
 **** Doom themes
@@ -101,13 +110,18 @@
      (use-package org-bullets
         :hook (org-mode . org-bullets-mode))
      #+END_src
+**** Doom modeline
+     Powerline is a library for customizing the mode-line that is based on the Vim Powerline.
+     #+begin_src emacs-lisp
+     (use-package doom-modeline
+       :config (doom-modeline-mode))
+     #+end_src
 *** Editing utilities
 **** Company autocomplete
      Modular text completion framework
      #+BEGIN_SRC emacs-lisp
      (use-package company
-       :ensure t
-       :diminish company-mode " Ⓒ "
+       :diminish
        :init (global-company-mode)
        :config (setq company-idle-delay .3
                      company-echo-delay 0
@@ -119,7 +133,7 @@
      Treat undo history as a tree
      #+BEGIN_SRC emacs-lisp
      (use-package undo-tree
-       :diminish undo-tree-mode " Ⓤ "
+       :diminish
        :config (global-undo-tree-mode))
      #+END_SRC
 **** Indent-guide
@@ -144,40 +158,36 @@
      Display available keybindings in popup
      #+BEGIN_SRC emacs-lisp
      (use-package which-key
-       :diminish which-key-mode " Ⓦ "
+       :diminish
        :config (which-key-mode))
      #+END_SRC
 **** Beacon
      Highlight the cursor whenever the window scrolls
        #+BEGIN_SRC emacs-lisp
        (use-package beacon
+         :diminish
          :hook (prog-mode . beacon-mode))
        #+END_SRC
 **** Anzu
      Show number of matches in mode-line while searching
      #+BEGIN_SRC emacs-lisp
      (use-package anzu
+       :diminish
        :config (global-anzu-mode))
      #+END_SRC
 *** Project and external tools
 **** Deadgrep
      Fast, friendly searching with ripgrep
      #+BEGIN_SRC emacs-lisp
-     (use-package deadgrep
-       :bind ("<f3>" . deadgrep))
+     (report-missing-executable "rg" "Ripgrep"
+       (use-package deadgrep
+        :bind ("<f3>" . deadgrep)))
      #+END_SRC
 **** Magit
      A Git porcelain inside Emacs
      #+BEGIN_SRC emacs-lisp
      (use-package magit
        :bind ("C-x g" . magit-status))
-     #+END_SRC
-**** PATH & related variables
-     Get environment variables such as $PATH from the shell
-     #+BEGIN_SRC emacs-lisp
-     (use-package exec-path-from-shell
-       :custom (exec-path-from-shell-variables '("PATH" "MANPATH" "LD_LIBRARY_PATH" "LIBRARY_PATH"))
-       :config (exec-path-from-shell-initialize))
      #+END_SRC
 **** Flycheck
      On-the-fly syntax checking
@@ -190,7 +200,7 @@
      Manage and navigate projects in Emacs easily
      #+BEGIN_SRC emacs-lisp
      (use-package projectile
-       :diminish projectile-mode " Ⓟ "
+       :diminish
        :custom (projectile-enable-caching nil)
                (projectile-switch-project-action 'projectile-dired)
        :bind-keymap ("C-c p" . projectile-command-map)
@@ -207,7 +217,6 @@
      (use-package treemacs-magit
         :after treemacs magit)
       #+END_SRC
-
 *** Helm
     Helm is an Emacs incremental and narrowing framework. Obtained from https://tuhdo.github.io/helm-intro.html
     #+BEGIN_SRC emacs-lisp
@@ -251,7 +260,7 @@
 
     (helm-mode 1)
     (require 'diminish)
-    (diminish 'helm-mode " Ⓗ ")
+    (diminish 'helm-mode)
 
     (global-set-key (kbd "M-x") 'helm-M-x)
     (setq helm-M-x-fuzzy-match t) ;; optional fuzzy matching for helm-M-x
@@ -268,13 +277,12 @@
 *** Rust
     #+BEGIN_SRC emacs-lisp
     (use-package rust-mode  ;;A major emacs mode for editing Rust source code
-      :config
-      (setq rust-rustfmt-bin "~/.rustup/toolchains/nightly-2019-11-13-x86_64-unknown-linux-gnu/bin/rustfmt")
-      (setq rust-format-on-save t)
-      (define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)
-      (setq company-tooltip-align-annotations t)
-      (add-hook 'rust-mode-hook #'flycheck-mode)
-      (add-hook 'rust-mode-hook 'hs-minor-mode))
+      :custom (rust-rustfmt-bin "~/.rustup/toolchains/nightly-2019-11-13-x86_64-unknown-linux-gnu/bin/rustfmt")
+              (rust-format-on-save t)
+              (company-tooltip-align-annotations t)
+      :bind (:map rust-mode-map ("TAB" . company-indent-or-complete-common))
+      :hook (rust-mode . flycheck-mode)
+            (rust-mode . hs-minor-mode))
 
     (use-package flycheck-rust) ;; Flycheck: Rust additions and Cargo support
     (with-eval-after-load 'rust-mode
@@ -282,24 +290,22 @@
 
     (use-package racer  ;; Code completion, goto-definition and docs browsing for Rust via racer
         :diminish racer-mode " Ⓡ "
-        :config
-        (add-hook 'rust-mode-hook #'racer-mode)
-        (add-hook 'racer-mode-hook #'eldoc-mode)
-        (add-hook 'racer-mode-hook #'company-mode))
+        :hook (rust-mode . racer-mode)
+              (racer-mode . eldoc-mode)
+              (racer-mode . company-mode))
 
     (use-package cargo    ;; Emacs Minor Mode for Cargo, Rust's Package Manager
       :diminish cargo-mode " Ⓖ "
-      :config
-      (add-hook 'rust-mode-hook 'cargo-minor-mode)
-      (setq cargo-process--command-build "build")
-      (setq cargo-process--command-clippy "clippy --all")
-      (setq cargo-process--command-fmt "+nightly fmt")
-      (setq cargo-process--enable-rust-backtrace t))
+      :hook (rust-mode . cargo-minor-mode)
+      :custom (cargo-process--command-build "build")
+              (cargo-process--command-clippy "clippy --all")
+              (cargo-process--command-fmt "+nightly fmt")
+              (cargo-process--enable-rust-backtrace t))
     #+END_SRC
 *** Haskell
     #+BEGIN_SRC emacs-lisp
     (use-package haskell-mode
-      :bind ("<f3>" . haskell-compile)
+      :bind ("<f4>" . haskell-compile)
       :custom (haskell-stylish-on-save nil) ;; Don't use stylish haskell
               (haskell-tags-on-save t)      ;; Update the TAGS file
               (haskell-font-lock-symbols t) ;; Beautify some symbols

@@ -67,4 +67,9 @@
 (load "prolog")
 (load "ghcid")
 
+(defun report-missing-executable (exe name f)
+  (if (executable-find exe)
+      f
+    (user-error (s-concat name " not found in PATH, please install it"))))
+
 (org-babel-load-file "~/.emacs.d/config.org")
