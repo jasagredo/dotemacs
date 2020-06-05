@@ -11,8 +11,6 @@
 ;; Add melpa
 (add-to-list 'package-archives (cons "melpa" "https://melpa.org/packages/") t)
 (package-initialize)
-(require 'use-package-ensure)
-(setq use-package-always-ensure t)
 (unless (package-installed-p 'use-package)
   (setq package-check-signature nil)
   (package-refresh-contents)
@@ -20,47 +18,10 @@
   (setq package-check-signature 'allow-unsigned)
   (package-initialize)
   (package-refresh-contents)
-  (mapc (lambda (x) (unless (package-installed-p x)
-                 (package-install x)))
-        '(
-          doom-themes
-          magit
-          projectile
-          projectile-ripgrep
-          flycheck
-          company
-          treemacs
-          treemacs-projectile
-          treemacs-magit
-          helm
-          helm-company
-          helm-flycheck
-          helm-projectile
-          ace-window
-          use-package
-          undo-tree
-          rainbow-mode
-          multiple-cursors
-          indent-guide
-          exec-path-from-shell
-          diminish
-          dashboard
-          which-key
-          org-bullets
-          deadgrep
-          sane-term
-          all-the-icons
-          cheatsheet
-          anzu
-          beacon
-          carbon-now-sh
-          ;; programming
-          lsp-mode
-          haskell-mode
-          cargo
-          racer
-          rust-mode
-          flycheck-rust)))
+  (package-install 'use-package))
+
+(require 'use-package-ensure)
+(setq use-package-always-ensure t)
 
 ;; Load packages installed locally
 (add-to-list 'load-path "~/.emacs.d/lisp/")
