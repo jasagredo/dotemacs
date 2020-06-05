@@ -96,7 +96,6 @@
      A startup screen extracted from Spacemacs
      #+BEGIN_SRC emacs-lisp
      (use-package dashboard
-       :hook (after-init . dashboard-refresh-buffer)
        :config (dashboard-setup-startup-hook)
        :custom (dashboard-items '((recents  . 10)
                                   (bookmarks . 5)
@@ -326,7 +325,12 @@
              (lsp-mode . lsp-enable-which-key-integration))
       :custom (lsp-rust-server 'rust-analyzer)
               (lsp-keymap-prefix "C-x C-l")
-              (lsp-enable-snippet nil))
+              (lsp-enable-snippet nil)
+              (lsp-haskell-process-path-hie "haskell-language-server-wrapper"))
+
+    (use-package lsp-haskell
+      :config
+      (setq lsp-haskell-process-path-hie "haskell-language-server-wrapper"))
 
     (setq company-minimum-prefix-length 1
           company-idle-delay 0.0)
