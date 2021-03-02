@@ -1,8 +1,6 @@
-.trello/
 auto-save-list/
 backup/
 elpa/
-ido.last
 projectile-bookmarks.eld
 recentf
 request/
@@ -11,11 +9,12 @@ transient/
 .mc-lists.el
 .org-id-locations
 eshell/
-inits/*.el
 tramp
 *~
 custom.el
 .cache
-config.el
 session.*
 *.sqlite
+config.el
+*.elc
+var/
