@@ -6,7 +6,7 @@
 	url = https://github.com/ag91/code-compass
 [submodule "lisp/org-habit-plus"]
 	path = lisp/org-habit-plus
-	url = https://github.com/jasagredo/org-habit-plus
+	url = https://github.com/myshevchuk/org-habit-plus
 [submodule "lisp/fira-code-emacs"]
 	path = lisp/fira-code-emacs
 	url = https://github.com/jasagredo/fira-code-emacs

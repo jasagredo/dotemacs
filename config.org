@@ -25,16 +25,19 @@ will either become permanent and be added to this configuration or will be
 discarded.
 
 #+begin_src emacs-lisp
-(defvar gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
-(package-initialize)
-(add-to-list 'load-path (concat user-emacs-directory "org-mode/lisp"))
-(add-to-list 'load-path (concat user-emacs-directory "org-mode/contrib/lisp"))
-(require 'org)
-(setq custom-file (concat user-emacs-directory "custom.el"))
-(when (file-exists-p custom-file)
-(load custom-file))
-(global-auto-revert-mode)
-(global-set-key (kbd "<f12>") '(lambda () (interactive) (find-file (concat user-emacs-directory "config.org"))))
+  (defvar gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+  (package-initialize)
+  (add-to-list 'load-path (concat user-emacs-directory "org-mode/lisp"))
+  (add-to-list 'load-path (concat user-emacs-directory "org-mode/contrib/lisp"))
+  (require 'org)
+  (setq custom-file (concat user-emacs-directory "custom.el"))
+  (when (file-exists-p custom-file)
+  (load custom-file))
+  (global-auto-revert-mode)
+  (global-set-key (kbd "<f12>") '(lambda () (interactive) (find-file (concat user-emacs-directory "config.org"))))
+  (global-set-key (kbd "C-<f12>") '(lambda () (interactive) (progn (org-babel-tangle (concat user-emacs-directory "config.org"))
+                                                              (byte-compile-file (concat user-emacs-directory "config.el"))
+                                                              (load-file (concat user-emacs-directory "config.elc")))))
 #+end_src
   
 * Personal information
@@ -65,20 +68,23 @@ I will use ~use-package~ as a macro for defining my configuration blocks.
 Setting ~use-package-always-ensure~ will install any missing packages in the
 future.
 #+begin_src emacs-lisp
-(unless (package-installed-p 'use-package)
-  (setq package-check-signature nil)
-  (package-refresh-contents)
-  (package-install 'gnu-elpa-keyring-update)
-  (setq package-check-signature 'allow-unsigned)
-  (package-refresh-contents)
-  (package-install 'use-package))
-(setq use-package-verbose t)
-(setq use-package-always-ensure t)
-(require 'use-package)
-(use-package auto-compile
-  :config (auto-compile-on-load-mode))
-(setq load-prefer-newer t)
-(use-package use-package-ensure-system-package)
+  (unless (package-installed-p 'use-package)
+    (setq package-check-signature nil)
+    (package-refresh-contents)
+    (package-install 'gnu-elpa-keyring-update)
+    (setq package-check-signature 'allow-unsigned)
+    (package-refresh-contents)
+    (package-install 'use-package))
+
+  (require 'use-package)
+  (setq use-package-verbose t)
+  (setq use-package-always-ensure t)
+
+  (use-package auto-compile
+    :config (auto-compile-on-load-mode))
+  (setq load-prefer-newer t)
+
+  (use-package use-package-ensure-system-package)
 #+end_src
     
 * General configuration
@@ -89,12 +95,13 @@ column number, and every programming buffer will have line numbers unless otherw
 specified.
 
 #+begin_src emacs-lisp
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
-(menu-bar-mode -1)
-(tool-bar-mode -1)
-(toggle-scroll-bar -1)
-(add-hook 'prog-mode-hook #'linum-mode)
-(column-number-mode)
+  (add-to-list 'default-frame-alist '(fullscreen . maximized))
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (setq-default cursor-type 'hbar)
+  (toggle-scroll-bar -1)
+  (add-hook 'prog-mode-hook #'linum-mode)
+  (column-number-mode)
 #+end_src
 
 ** Visual options
@@ -108,22 +115,22 @@ Here I set a bunch of variables related to how are buffers presented.
 - Also I like having the current line highlighted always.
    
 #+begin_src emacs-lisp
-(setq frame-title-format '(:eval (if (buffer-file-name) (abbreviate-file-name (buffer-file-name)) "%b")))
-(setq visible-bell t)
-(use-package paren
-      :custom
-      (show-paren-delay 0)
-      :config
-      (show-paren-mode))
+  (setq frame-title-format '(:eval (if (buffer-file-name) (abbreviate-file-name (buffer-file-name)) "%b")))
+  (setq visible-bell t)
 
-  (use-package display-fill-column-indicator
-      :config
-      (global-display-fill-column-indicator-mode)
-      (setq-default fill-column 80))
+  (use-package paren
+        :custom
+        (show-paren-delay 0)
+        :config
+        (show-paren-mode))
 
-  (global-prettify-symbols-mode)
-  (set-face-attribute 'default nil :height 120)
-  (global-hl-line-mode)
+    (use-package display-fill-column-indicator
+        :config (setq-default fill-column 80)
+        :hook (prog-mode . display-fill-column-indicator-mode))
+
+    (global-prettify-symbols-mode)
+    (set-face-attribute 'default nil :height 120)
+    (global-hl-line-mode)
 #+end_src
    
 ** Editing and navegation options
@@ -174,6 +181,7 @@ I use firefox as my web browser.
 (setq browse-url-browser-function 'browse-url-generic
       browse-url-generic-program "firefox")   
 #+end_src
+
 * Helper functions
 A function to make a boxed title. For creating visual sections in code files.
   
@@ -354,11 +362,9 @@ A tree layout file explorer for Emacs
    :bind
    ("<f2>" . treemacs))
 
-(use-package treemacs-projectile
-   :after (treemacs projectile))
+(use-package treemacs-projectile)
 
-(use-package treemacs-magit
-   :after (treemacs magit))
+(use-package treemacs-magit)
 #+END_SRC
 *** Projectile
 Manage and navigate projects in Emacs easily. I personally don't take much
@@ -386,7 +392,7 @@ This is much better described by it's [[https://github.com/ag91/code-compass][gi
 Get environment variables such as $PATH from the shell
 #+BEGIN_SRC emacs-lisp
   (use-package exec-path-from-shell
-    :custom (exec-path-from-shell-variables '("PATH" "MANPATH" "LD_LIBRARY_PATH" "LIBRARY_PATH" "LC_ALL"))
+    :custom (exec-path-from-shell-variables '("PATH"))
             (exec-path-from-shell-check-startup-files nil)
             (exec-path-from-shell-arguments nil)
     :config (exec-path-from-shell-initialize))
@@ -440,7 +446,7 @@ Some visual packages that don't nearly require configuration. The fira-code part
 comes from [[https://github.com/johnw42/fira-code-emacs][here]].
 #+begin_src emacs-lisp
 (use-package all-the-icons)
-(use-package doom-themes        :config (load-theme 'doom-Iosvkem t))
+(use-package doom-themes        :config (load-theme 'doom-dracula t))
 (use-package doom-modeline      :config (doom-modeline-mode))  
 (use-package which-key          :config (which-key-mode))
 (use-package org-superstar      :hook (org-mode . org-superstar-mode))
@@ -464,11 +470,11 @@ comes from [[https://github.com/johnw42/fira-code-emacs][here]].
       (org-structure-template-alist '(("q" . "quote")
                                       ("s" . "src")
                                       ("el" . "src emacs-lisp")))
-      (org-todo-keywords '((sequence "TODO(t)" "WIP(t!)" "CHASE(c@/!)" "GAVE(g@/!)" "|" "DONE(d@/!)" "KILL(k@/!)")))
+      (org-todo-keywords '((sequence "TODO(t)" "WIP(w!)" "CHASE(c@/!)" "GAVE(g@/!)" "|" "DONE(d@/!)" "KILL(k@/!)")))
       (org-agenda-files (cl-concatenate 'list (directory-files js/org-directory t "\.org$" t) (directory-files (concat js/org-directory "projects/") t "\.org$" t)))
       (org-refile-targets (mapcar (lambda (x) `(,(org-file x))) '("agenda.org" "emails.org" "personal.org" "someday.org")))
-      (org-capture-templates '(("i" "inbox" entry (file (org-file "inbox.org")) "* TODO %?")
-                               ("t" "thought" entry (file (org-file "thoughts.org")) "* %?")))
+      (org-capture-templates '(("i" "inbox" entry (file "~/org/inbox.org") "* TODO %?")
+                               ("t" "thought" entry (file "~/org/thoughts.org") "* %?")))
       (org-columns-default-format "%40ITEM(Task) %CLOCKSUM(Time Spent) %SCHEDULED(Scheduled) %DEADLINE(Deadline)")
 
       (org-agenda-custom-commands '(("&" "Agenda"
@@ -485,6 +491,14 @@ comes from [[https://github.com/johnw42/fira-code-emacs][here]].
                    ((org-agenda-overriding-header "In Progress")))
              (todo "TODO"
                    ((org-agenda-overriding-header "Projects")
+                    (org-agenda-files (list (org-file "agenda.org")))
+                    ))
+             (todo "CHASE"
+                   ((org-agenda-overriding-header "Chasing")
+                    (org-agenda-files (list (org-file "agenda.org")))
+                    ))
+             (todo "GAVE"
+                   ((org-agenda-overriding-header "Given")
                     (org-agenda-files (list (org-file "agenda.org")))
                     ))
              nil))))
@@ -622,22 +636,22 @@ Direnv integration for emacs
 #+END_SRC
 ** Haskell
 #+BEGIN_SRC emacs-lisp
-(use-package haskell-mode
-       :custom
-       (haskell-stylish-on-save nil) ;; Don't use stylish haskell
-       (haskell-tags-on-save t)      ;; Update the TAGS file
-       (haskell-compile-cabal-build-command "stack build") ;; Always use stack
-       (haskell-compile-cabal-build-command-alt "stack clean --full")
-       (haskell-process-type 'stack-ghci)
-       (haskell-indent-offset 2)
-       (haskell-interactive-popup-errors nil)
-       :config
-       (add-to-list 'direnv-non-file-modes 'haskell-compilation-mode)
-       :bind
-       (:map haskell-mode-map
-             ("<f4>" . haskell-compile))
-       :hook
-       (haskell-mode . subword-mode))
+  (use-package haskell-mode
+         :custom
+         (haskell-stylish-on-save nil) ;; Don't use stylish haskell
+         (haskell-tags-on-save t)      ;; Update the TAGS file
+         (haskell-compiler-type 'stack)
+         (haskell-process-type 'stack-ghci)
+         (haskell-compile-stack-build-command "stack build")
+         (haskell-indent-offset 2)
+         (haskell-interactive-popup-errors nil)
+         :config
+         (add-to-list 'direnv-non-file-modes 'haskell-compilation-mode)
+         :bind
+         (:map haskell-mode-map
+               ("<f4>" . haskell-compile))
+         :hook
+         (haskell-mode . subword-mode))
 #+END_SRC
 ** Prolog
 A bit archaically distributed prolog mode package. Comes from [[https://bruda.ca/_media/emacs/prolog.el][here]].
@@ -654,43 +668,43 @@ A bit archaically distributed prolog mode package. Comes from [[https://bruda.ca
    #+end_src
 ** LSP
 #+BEGIN_SRC emacs-lisp
-(use-package lsp-mode
-       :commands
-       lsp
-       :hook
-       (rust-mode . lsp)
-       (haskell-mode . lsp)
-       (lsp-mode . lsp-enable-which-key-integration)
-       :custom
-       (lsp-prefer-flymake nil)
-       (lsp-rust-server 'rust-analyzer)
-       (lsp-keymap-prefix "C-x C-l")
-       (lsp-enable-snippet nil)
-       (lsp-file-watch-threshold 2000)
-       :config
-       (push "[/\\\\]\\.stack-work\\'" lsp-file-watch-ignored-directories)
-       (push "[/\\\\]\\target\\'" lsp-file-watch-ignored-directories))
+  (use-package lsp-mode
+         :commands
+         lsp
+         :hook
+         (rust-mode . lsp)
+         (haskell-mode . lsp)
+         (lsp-mode . lsp-enable-which-key-integration)
+         :custom
+         (lsp-prefer-flymake nil)
+         (setq lsp-rust-server 'rust-analyzer)
+         (lsp-keymap-prefix "C-x C-l")
+         (lsp-enable-snippet nil)
+         (lsp-file-watch-threshold 2000)
+         :config
+         (push "[/\\\\]\\.stack-work\\'" lsp-file-watch-ignored-directories)
+         (push "[/\\\\]\\target\\'" lsp-file-watch-ignored-directories))
 
-(use-package lsp-haskell
-       :config
-       (setq lsp-haskell-process-path-hie "haskell-language-server-wrapper"))
+  (use-package lsp-haskell
+         :config
+         (setq lsp-haskell-process-path-hie "haskell-language-server-wrapper"))
 
-(setq company-minimum-prefix-length 1
-      company-idle-delay 0.0)
-(setq gc-cons-threshold 100000000)
-(setq read-process-output-max (* 1024 1024))
+  (setq company-minimum-prefix-length 1
+        company-idle-delay 0.0)
+  (setq gc-cons-threshold 100000000)
+  (setq read-process-output-max (* 1024 1024))
 
-(use-package lsp-ui
-       :hook
-       (lsp-mode . lsp-ui-mode)
-       :custom
-       (lsp-ui-doc-header t)
-       (lsp-ui-doc-include-signature t)
-       (lsp-ui-doc-position 'top))
+  (use-package lsp-ui
+         :hook
+         (lsp-mode . lsp-ui-mode)
+         :custom
+         (lsp-ui-doc-header t)
+         (lsp-ui-doc-include-signature t)
+         (lsp-ui-doc-position 'top))
 
-(use-package lsp-treemacs
-       :hook
-       (lsp-mode . lsp-treemacs-sync-mode))
+  (use-package lsp-treemacs
+         :hook
+         (lsp-mode . lsp-treemacs-sync-mode))
 #+END_SRC
 * Emacs built in packages
 #+begin_src emacs-lisp
@@ -703,7 +717,7 @@ A bit archaically distributed prolog mode package. Comes from [[https://bruda.ca
   (defun my-gitlab-url ()
   "Return a GitLab merge request or issue URL.
   Intended as a value for `bug-reference-url-format'."
-  (format "https://xxx.atlassian.net/browse/%s%s"
+  (format "https://example.com/%s%s"
     (match-string-no-properties 1)
     (match-string-no-properties 2)))
   (setq bug-reference-url-format #'my-gitlab-url)
@@ -714,3 +728,5 @@ A bit archaically distributed prolog mode package. Comes from [[https://bruda.ca
 
 * Experimental 
 Stuff that goes in this section is intended to be moved to other sections soon.
+#+begin_src emacs-lisp
+#+end_src
